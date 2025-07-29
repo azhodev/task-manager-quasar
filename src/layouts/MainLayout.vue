@@ -1,20 +1,49 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+    <q-header
+      elevated
+      v-if="!isLoginPage"
+    >
+      <q-toolbar class="bg-black text-white">
+        <q-btn
+          flat
+          dense
+          round
+          icon="menu"
+          aria-label="Menu"
+          @click="toggleLeftDrawer"
+        />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title> Task Manager App </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer
+      v-if="!isLoginPage"
+      v-model="leftDrawerOpen"
+      show-if-above
+      bordered
+    >
       <q-list>
         <q-item-label header> Essential Links </q-item-label>
 
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
+        <EssentialLink
+          v-for="link in linksList"
+          :key="link.title"
+          v-bind="link"
+        />
+
+        <q-item>
+          <q-btn
+            type="button"
+            label="Выйти"
+            color="primary"
+            unelevated
+            class="full-width"
+            @click="handleLogout"
+          />
+        </q-item>
       </q-list>
     </q-drawer>
 
@@ -25,8 +54,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { useUserStore } from 'stores/user'
 import EssentialLink from 'components/EssentialLink.vue'
+
+const leftDrawerOpen = ref(false)
+
+const route = useRoute()
+const isLoginPage = computed(() => route.path === '/login')
+
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
 
 const linksList = [
   {
@@ -73,9 +114,12 @@ const linksList = [
   },
 ]
 
-const leftDrawerOpen = ref(false)
+const router = useRouter()
+const userStore = useUserStore()
 
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
+function handleLogout() {
+
+  userStore.logout()
+  router.push('/login')
 }
 </script>
