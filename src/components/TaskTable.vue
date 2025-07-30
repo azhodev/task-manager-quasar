@@ -29,6 +29,10 @@ const rows = computed(() => {
 function onEdit(task) {
   props.onEditTask?.(task)
 }
+
+function getStatusLabel(key) {
+  return statusStore.statuses.find(s => s.key === key)?.title || key
+}
 </script>
 
 <template>
@@ -57,41 +61,58 @@ function onEdit(task) {
     dense
     separator="horizontal"
     no-data-label="Нет задач"
-    class="bg-white"
-    table-style="color: black"
   >
-    <template #body-cell-status="props">
-      <q-td :props="props">
-        <q-chip
-          :color="props.row.status === 'done' ? 'green' : 'primary'"
-          text-color="white"
-          dense
+    <!-- Кастомная разметка строки -->
+    <template #body="props">
+      <q-tr
+        :props="props"
+        @click="onEdit(props.row)"
+        class="cursor-pointer hover:bg-grey-2"
+      >
+        <q-td
+          key="title"
+          :props="props"
         >
-          {{ props.row.status }}
-        </q-chip>
-      </q-td>
-    </template>
-
-    <template #body-cell-actions="props">
-      <q-td :props="props">
-        <q-btn
-          dense
-          flat
-          round
-          icon="edit"
-          color="primary"
-          @click="onEdit(props.row)"
-        />
-      </q-td>
-    </template>
-    <template #no-data>
-      <div class="text-black q-pa-md">Нет задач</div>
+          {{ props.row.title }}
+        </q-td>
+        <q-td
+          key="description"
+          :props="props"
+        >
+          {{ props.row.description }}
+        </q-td>
+        <q-td
+          key="status"
+          :props="props"
+        >
+          <q-chip
+            :color="props.row.status === 'done' ? 'green' : 'primary'"
+            text-color="white"
+            dense
+          >
+            {{ getStatusLabel(props.row.status) }}
+          </q-chip>
+        </q-td>
+        <q-td
+          key="deadline"
+          :props="props"
+        >
+          {{ props.row.deadline }}
+        </q-td>
+        <q-td
+          key="actions"
+          :props="props"
+        >
+          <q-btn
+            dense
+            flat
+            round
+            icon="edit"
+            color="primary"
+            @click.stop="onEdit(props.row)"
+          />
+        </q-td>
+      </q-tr>
     </template>
   </q-table>
 </template>
-
-<style scoped>
-.q-table__bottom-nodata {
-  color: black !important;
-}
-</style>

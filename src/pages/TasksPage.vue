@@ -55,7 +55,7 @@ function openNewDialog() {
           stack
           :toggle-color="activeToggleColor"
           color="grey-3"
-          text-color="grey-7"
+          text-color="grey-6"
           class="q-pa-xs"
           size="xs"
           :options="[
