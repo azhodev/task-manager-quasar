@@ -1,28 +1,19 @@
 <script setup>
-import { h, ref, computed } from 'vue'
+import { ref } from 'vue'
 import TaskBoard from '../components/TaskBoard.vue'
 import TaskTable from '../components/TaskTable.vue'
 import TaskDialog from '../components/TaskDialog.vue'
+import AddTaskButton from 'src/components/AddTaskButton.vue'
+import { useTaskDialog } from '../composables/useTaskDialog'
+
+const {
+  showDialog,
+  editedTask,
+  openDialog,
+  newTaskStatus
+} = useTaskDialog()
 
 const view = ref('board')
-const showDialog = ref(false)
-const editedTask = ref(null)
-
-const currentView = computed(() =>
-  view.value === 'board'
-    ? h(TaskBoard, { onEditTask: openEditDialog })
-    : h(TaskTable, { onEditTask: openEditDialog })
-)
-
-function openEditDialog(task) {
-  editedTask.value = { ...task }
-  showDialog.value = true
-}
-
-function openNewDialog() {
-  editedTask.value = null
-  showDialog.value = true
-}
 
 </script>
 
@@ -35,12 +26,8 @@ function openNewDialog() {
       <div class="text-h5">Мои задачи</div>
 
       <div class="row q-gutter-sm items-center">
-        <q-btn
-          label="Задача"
-          color="primary"
-          icon="add"
-          @click="openNewDialog"
-        />
+        <AddTaskButton />
+
         <q-btn-toggle
           v-model="view"
           spread
@@ -60,12 +47,27 @@ function openNewDialog() {
       class="q-mt-md"
       style="min-height: 60vh;"
     >
-      <component :is="currentView" />
+      <TaskBoard
+        v-if="view === 'board'"
+        :onEditTask="openDialog"
+        :show-dialog="showDialog"
+        :edited-task="editedTask"
+        :new-task-status="newTaskStatus"
+      />
+
+      <TaskTable
+        v-else
+        :onEditTask="openDialog"
+        :show-dialog="showDialog"
+        :edited-task="editedTask"
+        :new-task-status="newTaskStatus"
+      />
     </div>
 
     <TaskDialog
       v-model="showDialog"
       :edit-task="editedTask"
+      :default-status="newTaskStatus"
     />
   </q-page>
 </template>

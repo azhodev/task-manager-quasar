@@ -50,6 +50,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from 'stores/user'
+import { useQuasar } from 'quasar'
+
+const $q = useQuasar()
 
 const username = ref('')
 const password = ref('')
@@ -64,7 +67,7 @@ function handleLogin() {
     router.push('/tasks')
   } else {
     // можно через $q.notify или alert
-    alert('Неверный логин или пароль')
+    $q.notify({ position: 'top', type: 'negative', message: 'Неверный логин или пароль' })
   }
 }
 </script>

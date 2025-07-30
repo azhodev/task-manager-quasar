@@ -4,9 +4,14 @@ import draggable from 'vuedraggable'
 import { useTaskStore } from '../stores/task'
 import { useStatusStore } from '../stores/status'
 import { useGroupedTasks } from '../composables/useGroupedTasks'
+import TaskDialog from './TaskDialog.vue'
+import AddTaskButton from 'src/components/AddTaskButton.vue'
 
 const props = defineProps({
-  onEditTask: Function
+  onEditTask: Function,
+  showDialog: Boolean,
+  editedTask: Object,
+  newTaskStatus: String
 })
 
 const taskStore = useTaskStore()
@@ -100,9 +105,14 @@ function onDragChange(evt, newStatusKey) {
               <div class="board__placeholder" />
             </template>
           </draggable>
+          <AddTaskButton :onClick="() => props.onEditTask(null, col.key)" />
         </div>
       </div>
     </div>
+    <TaskDialog
+      :edit-task="editedTask"
+      :default-status="newTaskStatus"
+    />
   </div>
 </template>
 
@@ -121,6 +131,7 @@ function onDragChange(evt, newStatusKey) {
 .board__columns {
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
   justify-content: start;
   gap: 16px;
 }
@@ -130,6 +141,12 @@ function onDragChange(evt, newStatusKey) {
   flex: 0 0 auto;
   border: 1px dashed;
   border-radius: 4px;
+}
+
+.board__status-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .board__status-title {

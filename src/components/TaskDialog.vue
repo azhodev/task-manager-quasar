@@ -9,7 +9,8 @@ import { useGroupedTasks } from '../composables/useGroupedTasks'
 
 const props = defineProps({
   modelValue: Boolean,
-  editTask: Object // если передаётся — редактирование
+  editTask: Object, // если передаётся — редактирование
+  defaultStatus: String,
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -29,7 +30,7 @@ const form = ref({
   title: '',
   description: '',
   deadline: '',
-  status: 'todo'
+  status: props.defaultStatus || 'todo'
 })
 
 const proxyDate = ref('')
@@ -41,7 +42,6 @@ function updateProxy() {
 function saveDate() {
   form.value.deadline = proxyDate.value
 }
-
 
 const rules = {
   required: (val) => !!val || 'Обязательное поле'
@@ -56,12 +56,18 @@ watch(() => props.editTask, (task) => {
   }
 })
 
+watch(() => props.defaultStatus, (newVal) => {
+  if (!props.editTask) {
+    form.value.status = newVal || 'todo'
+  }
+})
+
 function resetForm() {
   form.value = {
     title: '',
     description: '',
     deadline: '',
-    status: 'todo'
+    status: props.defaultStatus || 'todo'
   }
 }
 
@@ -69,20 +75,20 @@ function onSave() {
   const f = form.value
 
   if (!f.title || !f.status) {
-    $q.notify({ type: 'negative', message: 'Пожалуйста, заполните все поля' })
+    $q.notify({ position: 'bottom-right', type: 'negative', message: 'Пожалуйста, заполните все поля' })
     return
   }
 
   if (props.editTask) {
     taskStore.updateTask(f.id, { ...f })
-    $q.notify({ type: 'positive', message: 'Задача обновлена' })
+    $q.notify({ position: 'bottom-right', type: 'positive', message: 'Задача обновлена' })
   } else {
     taskStore.addTask({
       ...f,
       id: uid(),
       ownerId: userStore.user.username
     })
-    $q.notify({ type: 'positive', message: 'Задача добавлена' })
+    $q.notify({ position: 'bottom-right', type: 'positive', message: 'Задача добавлена' })
     regroupTasks()
   }
 
