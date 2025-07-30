@@ -34,15 +34,31 @@
       show-if-above
       bordered
     >
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
+      <div class="drawer-inner">
+        <div class="user">
+          <q-avatar
+            color="primary"
+            text-color="white"
+          >
+            {{ userStore.user?.username?.charAt(0).toUpperCase() || '?' }}
+          </q-avatar>
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
+          <div class="text-subtitle2 q-mr-md">
+            {{ userStore.user?.username || 'Гость' }}
+          </div>
+        </div>
 
+        <div class="drawer-content">
+          <q-list>
+            <q-item-label header> Essential Links </q-item-label>
+
+            <EssentialLink
+              v-for="link in linksList"
+              :key="link.title"
+              v-bind="link"
+            />
+          </q-list>
+        </div>
         <q-item>
           <q-btn
             type="button"
@@ -53,7 +69,7 @@
             @click="handleLogout"
           />
         </q-item>
-      </q-list>
+      </div>
     </q-drawer>
 
     <q-page-container>
@@ -68,6 +84,7 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { useUserStore } from 'stores/user'
+
 import EssentialLink from 'components/EssentialLink.vue'
 
 const leftDrawerOpen = ref(false)
@@ -141,3 +158,25 @@ function toggleDarkMode() {
 }
 
 </script>
+
+
+<style scoped>
+.drawer-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+}
+
+.drawer-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+</style>
