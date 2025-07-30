@@ -31,7 +31,6 @@
     <q-drawer
       v-if="!isLoginPage"
       v-model="leftDrawerOpen"
-      show-if-above
       bordered
     >
       <div class="drawer-inner">
