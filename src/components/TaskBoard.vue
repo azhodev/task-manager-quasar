@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import draggable from 'vuedraggable'
 import { useTaskStore } from '../stores/task'
 import { useStatusStore } from '../stores/status'
@@ -32,8 +32,6 @@ function regroupTasks() {
 
 onMounted(regroupTasks)
 
-// Перегруппировать при изменениях
-watch(() => taskStore.userTasks, regroupTasks, { deep: true })
 watch(columns, regroupTasks)
 
 const newStatusLabel = ref('')
@@ -53,6 +51,7 @@ function onDragChange(evt, newStatusKey) {
 
   if (task.status !== newStatusKey) {
     taskStore.updateTask(task.id, { status: newStatusKey })
+    nextTick(() => regroupTasks())
   }
 }
 
@@ -93,7 +92,6 @@ function onDragChange(evt, newStatusKey) {
             v-model="groupedTasks[col.key]"
             :group="{ name: 'task', pull: true, put: true }"
             item-key="id"
-            ghost-class="ghost"
             @change="onDragChange($event, col.key)"
           >
             <template #item="{ element }">
@@ -113,7 +111,6 @@ function onDragChange(evt, newStatusKey) {
               <div class="board__placeholder" />
             </template>
           </draggable>
-
         </div>
       </div>
     </div>
