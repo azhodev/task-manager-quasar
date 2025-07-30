@@ -93,6 +93,7 @@ function onDragChange(evt, newStatusKey) {
             v-model="groupedTasks[col.key]"
             :group="{ name: 'task', pull: true, put: true }"
             item-key="id"
+            ghost-class="ghost"
             @change="onDragChange($event, col.key)"
           >
             <template #item="{ element }">
@@ -107,6 +108,9 @@ function onDragChange(evt, newStatusKey) {
                   </div>
                 </q-card-section>
               </q-card>
+            </template>
+            <template #placeholder>
+              <div class="board__placeholder" />
             </template>
           </draggable>
 
@@ -148,5 +152,23 @@ function onDragChange(evt, newStatusKey) {
 
 .board__task:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* DnD */
+.board__placeholder {
+  height: 80px;
+  border: 2px dashed #999;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.05);
+  margin-bottom: 15px;
+  transition: background-color 0.2s;
+}
+
+.sortable-ghost {
+  opacity: 0.4;
+}
+
+.sortable-chosen {
+  box-shadow: 0 0 10px rgba(0, 150, 250, 0.5);
 }
 </style>
