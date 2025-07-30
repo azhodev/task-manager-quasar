@@ -65,11 +65,10 @@ function resetForm() {
   }
 }
 
-// ✅ Сохранение задачи
 function onSave() {
   const f = form.value
 
-  if (!f.title || !f.description || !f.deadline || !f.status) {
+  if (!f.title || !f.status) {
     $q.notify({ type: 'negative', message: 'Пожалуйста, заполните все поля' })
     return
   }
@@ -92,6 +91,7 @@ function onSave() {
 }
 
 const statusStore = useStatusStore()
+
 const statusOptions = computed(() =>
   statusStore.statuses.map(s => ({
     value: s.key,
@@ -127,7 +127,6 @@ const statusOptions = computed(() =>
           label="Описание"
           type="textarea"
           v-model="form.description"
-          :rules="[rules.required]"
         />
 
         <div>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import draggable from 'vuedraggable'
 import { useTaskStore } from '../stores/task'
 import { useStatusStore } from '../stores/status'
@@ -15,8 +15,6 @@ const statusStore = useStatusStore()
 const { columns, groupedTasks, regroupTasks } = useGroupedTasks()
 
 onMounted(regroupTasks)
-
-watch(columns, regroupTasks)
 
 const newStatusLabel = ref('')
 
@@ -34,11 +32,11 @@ function onDragChange(evt, newStatusKey) {
   if (!task || !task.id) return
 
   if (task.status !== newStatusKey) {
+    task.status = newStatusKey
     taskStore.updateTask(task.id, { status: newStatusKey })
     nextTick(() => regroupTasks())
   }
 }
-
 </script>
 
 <template>
@@ -117,7 +115,6 @@ function onDragChange(evt, newStatusKey) {
   display: flex;
   flex-wrap: wrap;
   justify-content: start;
-  /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
   gap: 16px;
   min-height: 100vh;
 }
