@@ -18,7 +18,6 @@ export const useTaskStore = defineStore('task', {
     updateTask(id, data) {
       const i = this.tasks.findIndex(t => t.id === id)
       if (i !== -1) Object.assign(this.tasks[i], data)
-      console.log('Updated task:', this.tasks[i])
     }
   }
 })

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
+import draggable from 'vuedraggable'
 import { useTaskStore } from '../stores/task'
 import { useStatusStore } from '../stores/status'
 
@@ -44,6 +45,17 @@ function addStatus() {
   newStatusLabel.value = ''
   regroupTasks()
 }
+
+function onDragChange(evt, newStatusKey) {
+  let task = evt?.added?.element
+
+  if (!task || !task.id) return
+
+  if (task.status !== newStatusKey) {
+    taskStore.updateTask(task.id, { status: newStatusKey })
+  }
+}
+
 </script>
 
 <template>
@@ -77,22 +89,27 @@ function addStatus() {
           <div class="board__status-title text-subtitle1 q-mb-sm text-body">
             {{ col.title }}
           </div>
+          <draggable
+            v-model="groupedTasks[col.key]"
+            :group="{ name: 'task', pull: true, put: true }"
+            item-key="id"
+            @change="onDragChange($event, col.key)"
+          >
+            <template #item="{ element }">
+              <q-card
+                class="board__task q-mb-sm cursor-pointer"
+                @click="props.onEditTask?.(element)"
+              >
+                <q-card-section>
+                  <div class="board__task-title text-body1">{{ element.title }}</div>
+                  <div class="board__task-description text-caption text-grey">
+                    {{ element.description }}
+                  </div>
+                </q-card-section>
+              </q-card>
+            </template>
+          </draggable>
 
-          <TransitionGroup>
-            <q-card
-              v-for="task in groupedTasks[col.key]"
-              :key="task.id"
-              class="board__task q-mb-sm cursor-pointer"
-              @click="props.onEditTask?.(task)"
-            >
-              <q-card-section>
-                <div class="board__task-title text-body1">{{ task.title }}</div>
-                <div class="board__task-description text-caption text-grey">
-                  {{ task.description }}
-                </div>
-              </q-card-section>
-            </q-card>
-          </TransitionGroup>
         </div>
       </div>
     </div>
