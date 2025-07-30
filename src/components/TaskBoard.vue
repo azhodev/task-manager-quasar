@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import { VueDraggableNext } from 'vue-draggable-next'
 import { useTaskStore } from '../stores/task'
 import { useStatusStore } from '../stores/status'
 
@@ -45,15 +44,6 @@ function addStatus() {
   newStatusLabel.value = ''
   regroupTasks()
 }
-
-function onTaskDrop(event, newStatusKey) {
-  const newIndex = event.newIndex
-  const movedTask = groupedTasks.value[newStatusKey][newIndex]
-  if (!movedTask) return
-  if (movedTask.status !== newStatusKey) {
-    taskStore.updateTask(movedTask.id, { status: newStatusKey })
-  }
-}
 </script>
 
 <template>
@@ -88,28 +78,21 @@ function onTaskDrop(event, newStatusKey) {
             {{ col.title }}
           </div>
 
-          <VueDraggableNext
-            :list="groupedTasks[col.key]"
-            :group="{ name: 'tasks', pull: true, put: true }"
-            item-key="id"
-            @end="event => onTaskDrop(event, col.key)"
-          >
-            <TransitionGroup>
-              <q-card
-                v-for="task in groupedTasks[col.key]"
-                :key="task.id"
-                class="board__task q-mb-sm cursor-pointer"
-                @click="props.onEditTask?.(task)"
-              >
-                <q-card-section>
-                  <div class="board__task-title text-body1">{{ task.title }}</div>
-                  <div class="board__task-description text-caption text-grey">
-                    {{ task.description }}
-                  </div>
-                </q-card-section>
-              </q-card>
-            </TransitionGroup>
-          </VueDraggableNext>
+          <TransitionGroup>
+            <q-card
+              v-for="task in groupedTasks[col.key]"
+              :key="task.id"
+              class="board__task q-mb-sm cursor-pointer"
+              @click="props.onEditTask?.(task)"
+            >
+              <q-card-section>
+                <div class="board__task-title text-body1">{{ task.title }}</div>
+                <div class="board__task-description text-caption text-grey">
+                  {{ task.description }}
+                </div>
+              </q-card-section>
+            </q-card>
+          </TransitionGroup>
         </div>
       </div>
     </div>
