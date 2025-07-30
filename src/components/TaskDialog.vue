@@ -94,8 +94,6 @@ const statusOptions = computed(() =>
     label: s.title
   }))
 )
-console.log('statusOptions', statusOptions.value);
-
 </script>
 
 <template>

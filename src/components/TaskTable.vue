@@ -1,14 +1,16 @@
 <script setup>
+import { ref, computed } from 'vue'
 import { useTaskStore } from '../stores/task'
-import { useQuasar } from 'quasar'
-import { computed } from 'vue'
+import { useStatusStore } from '../stores/status'
 
 const props = defineProps({
   onEditTask: Function
 })
 
-const $q = useQuasar()
 const taskStore = useTaskStore()
+const statusStore = useStatusStore()
+
+const selectedStatus = ref('all') // 'all' — по умолчанию
 
 const columns = [
   { name: 'title', label: 'Задача', field: 'title', align: 'left' },
@@ -18,26 +20,34 @@ const columns = [
   { name: 'actions', label: '', field: 'actions', align: 'right' }
 ]
 
-const rows = computed(() => taskStore.userTasks)
+const rows = computed(() => {
+  const tasks = taskStore.userTasks
+  if (selectedStatus.value === 'all') return tasks
+  return tasks.filter(t => t.status === selectedStatus.value)
+})
 
 function onEdit(task) {
   props.onEditTask?.(task)
 }
-
-function onDelete(task) {
-  $q.dialog({
-    title: 'Удаление',
-    message: `Удалить задачу "${task.title}"?`,
-    cancel: true,
-    persistent: true
-  }).onOk(() => {
-    taskStore.tasks = taskStore.tasks.filter(t => t.id !== task.id)
-    $q.notify({ type: 'positive', message: 'Задача удалена' })
-  })
-}
 </script>
 
 <template>
+  <div class="q-mb-md row items-center q-gutter-sm">
+    <div class="text-subtitle2">Фильтр по статусу:</div>
+    <q-select
+      v-model="selectedStatus"
+      :options="[
+        { label: 'Все', value: 'all' },
+        ...statusStore.statuses.map(s => ({ label: s.title, value: s.key }))
+      ]"
+      dense
+      outlined
+      emit-value
+      map-options
+      style="min-width: 200px"
+    />
+  </div>
+
   <q-table
     :rows="rows"
     :columns="columns"
@@ -70,14 +80,6 @@ function onDelete(task) {
           icon="edit"
           color="primary"
           @click="onEdit(props.row)"
-        />
-        <q-btn
-          dense
-          flat
-          round
-          icon="delete"
-          color="negative"
-          @click="onDelete(props.row)"
         />
       </q-td>
     </template>
