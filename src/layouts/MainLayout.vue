@@ -4,7 +4,7 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { useUserStore } from 'stores/user'
-import { linksList } from 'src/constants/linksList'
+import { LINKS_LIST } from 'src/constants/links'
 
 import EssentialLink from 'components/EssentialLink.vue'
 
@@ -89,7 +89,7 @@ function toggleDarkMode() {
             <q-item-label header> Essential Links </q-item-label>
 
             <EssentialLink
-              v-for="link in linksList"
+              v-for="link in LINKS_LIST"
               :key="link.title"
               v-bind="link"
             />

@@ -23,26 +23,24 @@ const view = ref('board')
     class="column q-gutter-md"
   >
     <div class="row items-center justify-between">
-      <div class="text-h5">Мои задачи</div>
+      <div class="text-h5 q-mr-lg">Мои задачи</div>
+      <q-btn-toggle
+        v-model="view"
+        spread
+        no-caps
+        stack
+        size="xs"
+        :options="[
+          { label: 'Доска', value: 'board', icon: 'view_module' },
+          { label: 'Таблица', value: 'table', icon: 'table_chart' }
+        ]"
+      />
 
-      <div class="row q-gutter-sm items-center">
+      <div class="q-ml-auto">
         <AddTaskButton
           v-if="view !== 'board'"
           @click="openDialog()"
         />
-
-        <q-btn-toggle
-          v-model="view"
-          spread
-          no-caps
-          stack
-          size="xs"
-          :options="[
-            { label: 'Доска', value: 'board', icon: 'view_module' },
-            { label: 'Таблица', value: 'table', icon: 'table_chart' }
-          ]"
-        />
-
       </div>
     </div>
 
@@ -50,21 +48,19 @@ const view = ref('board')
       class="q-mt-md"
       style="min-height: 60vh;"
     >
-      <TaskBoard
-        v-if="view === 'board'"
-        :onEditTask="openDialog"
-        :show-dialog="showDialog"
-        :edited-task="editedTask"
-        :new-task-status="newTaskStatus"
-      />
-
-      <TaskTable
-        v-else
-        :onEditTask="openDialog"
-        :show-dialog="showDialog"
-        :edited-task="editedTask"
-        :new-task-status="newTaskStatus"
-      />
+      <transition
+        name="fade"
+        mode="out-in"
+      >
+        <component
+          :is="view === 'board' ? TaskBoard : TaskTable"
+          :key="view"
+          :onEditTask="openDialog"
+          :show-dialog="showDialog"
+          :edited-task="editedTask"
+          :new-task-status="newTaskStatus"
+        />
+      </transition>
     </div>
 
     <TaskDialog
@@ -74,3 +70,16 @@ const view = ref('board')
     />
   </q-page>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.1s ease, filter .1s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: .5;
+  filter: blur(10px);
+}
+</style>

@@ -47,7 +47,7 @@ function onDragChange(evt, newStatusKey) {
 
 <template>
   <div class="board">
-    <div class="board__new-status row q-col-gutter-sm q-mt-md">
+    <div class="board__new-status row q-col-gutter-sm">
       <div class="board__new-status-input col">
         <q-input
           v-model="newStatusLabel"
@@ -125,7 +125,6 @@ function onDragChange(evt, newStatusKey) {
 
 .board__new-status {
   max-width: 300px;
-  margin-left: auto;
 }
 
 .board__columns {

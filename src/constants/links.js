@@ -1,4 +1,4 @@
-export const linksList = [
+export const LINKS_LIST = [
   {
     title: 'Docs',
     caption: 'quasar.dev',
