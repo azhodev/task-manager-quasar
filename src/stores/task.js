@@ -13,7 +13,7 @@ export const useTaskStore = defineStore('task', {
   },
   actions: {
     addTask(task) {
-      this.tasks.push(task)
+      this.tasks.unshift(task)
     },
     updateTask(id, data) {
       const i = this.tasks.findIndex(t => t.id === id)

@@ -96,7 +96,7 @@ function getStatusLabel(key) {
           <q-td
             key="description"
             :props="props"
-            style="width: 300px; max-width: 300px;"
+            style="width: 600px; max-width: 600px;"
             class="text-truncate"
           >
             {{ props.row.description }}
@@ -147,6 +147,7 @@ function getStatusLabel(key) {
 .task-table {
   display: flex;
   flex-direction: column;
+  align-items: end;
 }
 
 .text-truncate {

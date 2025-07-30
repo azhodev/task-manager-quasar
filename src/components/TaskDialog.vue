@@ -96,6 +96,11 @@ function onSave() {
   resetForm()
 }
 
+function onCancel() {
+  dialog.value = false
+  resetForm()
+}
+
 const statusStore = useStatusStore()
 
 const statusOptions = computed(() =>
@@ -111,7 +116,12 @@ const statusOptions = computed(() =>
     v-model="dialog"
     persistent
   >
-    <q-card style="min-width: 400px; max-width: 90vw;">
+    <q-card
+      @keydown.ctrl.enter.prevent="onSave"
+      @keydown.esc.prevent="onCancel"
+      tabindex="0"
+      style="min-width: 400px; max-width: 90vw;"
+    >
       <q-card-section>
         <div class="text-h6">
           {{ props.editTask ? 'Редактировать' : 'Новая задача' }}
@@ -123,6 +133,7 @@ const statusOptions = computed(() =>
       <q-card-section class="q-gutter-md">
         <q-input
           filled
+          autofocus
           label="Название"
           v-model="form.title"
           :rules="[rules.required]"
