@@ -169,7 +169,6 @@ const statusOptions = computed(() =>
           :options="statusOptions"
           emit-value
           map-options
-          :rules="[rules.required]"
         />
       </q-card-section>
 

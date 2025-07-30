@@ -129,17 +129,21 @@ function onTaskDrop(event, newStatusKey) {
 }
 
 .board__columns {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
   gap: 16px;
 }
 
 .board__status {
-  width: 100%;
+  width: 300px;
+  flex: 0 0 auto;
 }
 
 .board__task {
   transition: box-shadow 0.2s;
+  margin-bottom: 15px;
 }
 
 .board__task:hover {
