@@ -17,6 +17,7 @@ const { columns, groupedTasks, regroupTasks } = useGroupedTasks()
 onMounted(regroupTasks)
 
 const newStatusLabel = ref('')
+const dragOverKey = ref(null)
 
 function addStatus() {
   const key = newStatusLabel.value.trim().toLowerCase().replace(/\s+/g, '_')
@@ -65,6 +66,12 @@ function onDragChange(evt, newStatusKey) {
         v-for="col in columns"
         :key="col.key"
         class="board__status col-12 col-sm"
+        :class="{ 'drag-over': dragOverKey === col.key }"
+        @dragenter="() => dragOverKey = col.key"
+        @dragleave="(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) dragOverKey = null
+        }"
+        @drop="() => dragOverKey = null"
       >
         <div class="board__status-inner q-pa-sm rounded-borders">
           <div class="board__status-title text-subtitle1 q-mb-sm text-body">
@@ -154,5 +161,13 @@ function onDragChange(evt, newStatusKey) {
 
 .sortable-chosen {
   box-shadow: 0 0 10px rgba(0, 150, 250, 0.5);
+}
+
+.board__status.drag-over {
+  border-color: #027be3;
+  /* Quasar primary или другой цвет */
+  box-shadow: 0 0 0 2px rgba(2, 123, 227, 0.4);
+  background-color: transparent;
+  transition: box-shadow 0.2s, border-color 0.2s;
 }
 </style>
