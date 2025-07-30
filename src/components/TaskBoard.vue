@@ -65,7 +65,9 @@ function onTaskDrop(event, newStatusKey) {
         class="col-12 col-sm"
       >
         <div class="q-pa-sm bg-grey-2 rounded-borders">
-          <div class="text-subtitle1 q-mb-sm">{{ col.title }}</div>
+          <div class="text-subtitle1 q-mb-sm text-dark">
+            {{ col.title }}
+          </div>
 
           <VueDraggableNext
             :list="groupedTasks[col.key]"

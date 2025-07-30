@@ -58,6 +58,7 @@ function onEdit(task) {
     separator="horizontal"
     no-data-label="Нет задач"
     class="bg-white"
+    table-style="color: black"
   >
     <template #body-cell-status="props">
       <q-td :props="props">
@@ -83,5 +84,14 @@ function onEdit(task) {
         />
       </q-td>
     </template>
+    <template #no-data>
+      <div class="text-black q-pa-md">Нет задач</div>
+    </template>
   </q-table>
 </template>
+
+<style scoped>
+.q-table__bottom-nodata {
+  color: black !important;
+}
+</style>
