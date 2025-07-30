@@ -3,22 +3,15 @@ import { h, ref, computed } from 'vue'
 import TaskBoard from '../components/TaskBoard.vue'
 import TaskTable from '../components/TaskTable.vue'
 import TaskDialog from '../components/TaskDialog.vue'
-import { useQuasar } from 'quasar'
 
 const view = ref('board')
 const showDialog = ref(false)
 const editedTask = ref(null)
 
-const $q = useQuasar()
-
 const currentView = computed(() =>
   view.value === 'board'
     ? h(TaskBoard, { onEditTask: openEditDialog })
     : h(TaskTable, { onEditTask: openEditDialog })
-)
-
-const activeToggleColor = computed(() =>
-  $q.dark.isActive ? 'grey-9' : 'primary'
 )
 
 function openEditDialog(task) {
@@ -43,7 +36,7 @@ function openNewDialog() {
 
       <div class="row q-gutter-sm items-center">
         <q-btn
-          label="Добавить задачу"
+          label="Задача"
           color="primary"
           icon="add"
           @click="openNewDialog"
@@ -53,10 +46,6 @@ function openNewDialog() {
           spread
           no-caps
           stack
-          :toggle-color="activeToggleColor"
-          color="grey-3"
-          text-color="grey-6"
-          class="q-pa-xs"
           size="xs"
           :options="[
             { label: 'Доска', value: 'board', icon: 'view_module' },

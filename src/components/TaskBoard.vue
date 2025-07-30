@@ -69,7 +69,7 @@ function onTaskDrop(event, newStatusKey) {
       </div>
       <div class="board__new-status-button col-auto">
         <q-btn
-          label="Добавить"
+          icon="add"
           @click="addStatus"
           color="primary"
           dense
