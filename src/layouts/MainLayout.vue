@@ -86,7 +86,7 @@ import { useUserStore } from 'stores/user'
 
 import EssentialLink from 'components/EssentialLink.vue'
 
-const leftDrawerOpen = ref(false)
+const leftDrawerOpen = ref(true)
 
 const route = useRoute()
 const isLoginPage = computed(() => route.path === '/login')
