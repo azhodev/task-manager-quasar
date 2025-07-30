@@ -1,43 +1,48 @@
-# Quasar App (task-manager)
+# Task Manager
 
-A Quasar Project
+A personal task management app built with [Quasar](https://quasar.dev/), powered by Vue 3, Pinia, and vue-draggable-next.
 
-## Install the dependencies
+## Features
+
+- 💡 Task columns with drag-and-drop (DnD)
+- 🌗 Light/Dark theme
+- 📦 Modular architecture using Pinia and Vue Router
+- ✅ Pre-configured ESLint + Prettier
+- 🧩 Quasar UI components
+
+## Getting Started
+
+### Install dependencies
 
 ```bash
-yarn
-# or
 npm install
+
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### Start development server
 
 ```bash
-quasar dev
+npm run dev
 ```
 
-### Lint the files
+### Build for production
 
 ```bash
-yarn lint
-# or
-npm run lint
+npm run build
+
 ```
 
-### Format the files
+### Lint & Format code
 
 ```bash
-yarn format
-# or
-npm run format
+npm run lint      # Lint with ESLint
+npm run format    # Format with Prettier
 ```
 
-### Build the app for production
+## Tech Stack
 
-```bash
-quasar build
-```
-
-### Customize the configuration
-
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+- Quasar Framework v2
+- Vue 3
+- Pinia
+- Vue Router
+- Vue Draggable Next
