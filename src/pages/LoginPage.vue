@@ -11,15 +11,19 @@
       <q-card-section>
         <q-form
           @submit.prevent="handleLogin"
-          class="q-gutter-md"
+          class="q-gutter-y-md"
         >
           <q-input
-            filled
+            outlined
             v-model="username"
             label="Имя пользователя"
             lazy-rules
             :rules="[val => !!val || 'Введите имя']"
-          />
+          >
+            <template #prepend>
+              <q-icon name="person" />
+            </template>
+          </q-input>
           <q-btn
             type="submit"
             label="Войти"
