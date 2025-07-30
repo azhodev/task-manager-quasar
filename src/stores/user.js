@@ -8,8 +8,13 @@ export const useUserStore = defineStore('user', {
     isAuthenticated: (state) => !!state.user
   },
   actions: {
-    login(username) {
-      this.user = { username }  // Упрощённая
+    login(username, password) {
+      // Упрощённая проверка: логин admin, пароль 1234
+      if (username === 'admin' && password === '1234') {
+        this.user = { username }
+        return true
+      }
+      return false
     },
     logout() {
       this.user = null

@@ -26,6 +26,12 @@ const rows = computed(() => {
   return tasks.filter(t => t.status === selectedStatus.value)
 })
 
+const getStatusColor = (status) => {
+  if (status === 'done') return 'green'
+  if (status === 'todo') return 'grey'
+  return 'primary'
+}
+
 function onEdit(task) {
   props.onEditTask?.(task)
 }
@@ -36,83 +42,93 @@ function getStatusLabel(key) {
 </script>
 
 <template>
-  <div class="q-mb-md row items-center q-gutter-sm">
-    <div class="text-subtitle2">Фильтр по статусу:</div>
-    <q-select
-      v-model="selectedStatus"
-      :options="[
-        { label: 'Все', value: 'all' },
-        ...statusStore.statuses.map(s => ({ label: s.title, value: s.key }))
-      ]"
-      dense
-      outlined
-      emit-value
-      map-options
-      style="min-width: 200px"
-    />
-  </div>
+  <div class="task-table">
+    <div class="task-table__filter q-mb-md q-ml-auto row items-center">
+      <div class="task-table__filter-label text-subtitle2 q-mr-md">Фильтр по статусу:</div>
+      <q-select
+        class="task-table__filter-select"
+        v-model="selectedStatus"
+        :options="[
+          { label: 'Все', value: 'all' },
+          ...statusStore.statuses.map(s => ({ label: s.title, value: s.key }))
+        ]"
+        dense
+        outlined
+        emit-value
+        map-options
+        style="min-width: 200px"
+      />
+    </div>
 
-  <q-table
-    :rows="rows"
-    :columns="columns"
-    row-key="id"
-    flat
-    bordered
-    dense
-    separator="horizontal"
-    no-data-label="Нет задач"
-  >
-    <!-- Кастомная разметка строки -->
-    <template #body="props">
-      <q-tr
-        :props="props"
-        @click="onEdit(props.row)"
-        class="cursor-pointer hover:bg-grey-2"
-      >
-        <q-td
-          key="title"
+    <q-table
+      :rows="rows"
+      :columns="columns"
+      row-key="id"
+      flat
+      bordered
+      dense
+      separator="horizontal"
+      no-data-label="Нет задач"
+    >
+      <!-- Кастомная разметка строки -->
+      <template #body="props">
+        <q-tr
           :props="props"
+          @click="onEdit(props.row)"
+          class="cursor-pointer hover:bg-grey-2"
         >
-          {{ props.row.title }}
-        </q-td>
-        <q-td
-          key="description"
-          :props="props"
-        >
-          {{ props.row.description }}
-        </q-td>
-        <q-td
-          key="status"
-          :props="props"
-        >
-          <q-chip
-            :color="props.row.status === 'done' ? 'green' : 'primary'"
-            text-color="white"
-            dense
+          <q-td
+            key="title"
+            :props="props"
           >
-            {{ getStatusLabel(props.row.status) }}
-          </q-chip>
-        </q-td>
-        <q-td
-          key="deadline"
-          :props="props"
-        >
-          {{ props.row.deadline }}
-        </q-td>
-        <q-td
-          key="actions"
-          :props="props"
-        >
-          <q-btn
-            dense
-            flat
-            round
-            icon="edit"
-            color="primary"
-            @click.stop="onEdit(props.row)"
-          />
-        </q-td>
-      </q-tr>
-    </template>
-  </q-table>
+            {{ props.row.title }}
+          </q-td>
+          <q-td
+            key="description"
+            :props="props"
+          >
+            {{ props.row.description }}
+          </q-td>
+          <q-td
+            key="status"
+            :props="props"
+          >
+            <q-chip
+              :color="getStatusColor(props.row.status)"
+              text-color="white"
+              dense
+            >
+              {{ getStatusLabel(props.row.status) }}
+            </q-chip>
+          </q-td>
+          <q-td
+            key="deadline"
+            :props="props"
+          >
+            {{ props.row.deadline }}
+          </q-td>
+          <q-td
+            key="actions"
+            :props="props"
+          >
+            <q-btn
+              dense
+              flat
+              round
+              icon="edit"
+              color="primary"
+              @click.stop="onEdit(props.row)"
+            />
+          </q-td>
+        </q-tr>
+      </template>
+    </q-table>
+  </div>
 </template>
+
+<style scoped>
+.task-table {
+  display: flex;
+  flex-direction: column;
+}
+</style>

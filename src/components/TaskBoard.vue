@@ -60,7 +60,7 @@ function onDragChange(evt, newStatusKey) {
       </div>
     </div>
 
-    <div class="board__columns row q-col-gutter-md wrap">
+    <div class="board__columns row  wrap">
       <div
         v-for="col in columns"
         :key="col.key"
@@ -116,12 +116,17 @@ function onDragChange(evt, newStatusKey) {
   flex-wrap: wrap;
   justify-content: start;
   gap: 16px;
-  min-height: 100vh;
 }
 
 .board__status {
   width: 300px;
   flex: 0 0 auto;
+  border: 1px dashed;
+  border-radius: 4px;
+}
+
+.board__status-title {
+  text-align: center;
 }
 
 .board__task {
