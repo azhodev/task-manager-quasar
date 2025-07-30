@@ -83,8 +83,8 @@ function onTaskDrop(event, newStatusKey) {
         :key="col.key"
         class="board__status col-12 col-sm"
       >
-        <div class="board__status-inner q-pa-sm bg-grey-2 rounded-borders">
-          <div class="board__status-title text-subtitle1 q-mb-sm text-dark">
+        <div class="board__status-inner q-pa-sm rounded-borders">
+          <div class="board__status-title text-subtitle1 q-mb-sm text-body">
             {{ col.title }}
           </div>
 
