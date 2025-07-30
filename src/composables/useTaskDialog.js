@@ -15,6 +15,7 @@ export function useTaskDialog() {
   const closeDialog = () => {
     showDialog.value = false
     editedTask.value = null
+    newTaskStatus.value = null
   }
 
   return {

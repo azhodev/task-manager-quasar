@@ -2,6 +2,13 @@
 import { ref, computed } from 'vue'
 import { useTaskStore } from '../stores/task'
 import { useStatusStore } from '../stores/status'
+import TaskDialog from '../components/TaskDialog.vue'
+import { useTaskDialog } from '../composables/useTaskDialog'
+
+const {
+  showDialog,
+  editedTask,
+} = useTaskDialog()
 
 const props = defineProps({
   onEditTask: Function
@@ -61,11 +68,12 @@ function getStatusLabel(key) {
     </div>
 
     <q-table
+      class="my-sticky-column-table"
+      flat
+      bordered
       :rows="rows"
       :columns="columns"
       row-key="id"
-      flat
-      bordered
       dense
       separator="horizontal"
       no-data-label="Нет задач"
@@ -80,12 +88,16 @@ function getStatusLabel(key) {
           <q-td
             key="title"
             :props="props"
+            style="width: 300px; max-width: 300px;"
+            class="text-truncate"
           >
             {{ props.row.title }}
           </q-td>
           <q-td
             key="description"
             :props="props"
+            style="width: 300px; max-width: 300px;"
+            class="text-truncate"
           >
             {{ props.row.description }}
           </q-td>
@@ -123,6 +135,11 @@ function getStatusLabel(key) {
         </q-tr>
       </template>
     </q-table>
+
+    <TaskDialog
+      v-model="showDialog"
+      :edit-task="editedTask"
+    />
   </div>
 </template>
 
@@ -130,5 +147,11 @@ function getStatusLabel(key) {
 .task-table {
   display: flex;
   flex-direction: column;
+}
+
+.text-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>
