@@ -16,6 +16,15 @@
 
         <q-toolbar-title> Task Manager App </q-toolbar-title>
 
+        <q-btn
+          dense
+          flat
+          round
+          icon="dark_mode"
+          @click="toggleDarkMode"
+          :color="isDark ? 'yellow' : 'white'"
+          :title="isDark ? 'Светлая тема' : 'Тёмная тема'"
+        />
       </q-toolbar>
     </q-header>
 
@@ -54,6 +63,7 @@
 </template>
 
 <script setup>
+import { useQuasar } from 'quasar'
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
@@ -122,4 +132,12 @@ function handleLogout() {
   userStore.logout()
   router.push('/login')
 }
+
+const $q = useQuasar()
+const isDark = computed(() => $q.dark.isActive)
+
+function toggleDarkMode() {
+  $q.dark.set(!$q.dark.isActive)
+}
+
 </script>
