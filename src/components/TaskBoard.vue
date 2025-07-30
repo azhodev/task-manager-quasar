@@ -67,47 +67,53 @@ function onDragChange(evt, newStatusKey) {
     </div>
 
     <div class="board__columns row  wrap">
-      <div
-        v-for="col in columns"
-        :key="col.key"
-        class="board__status col-12 col-sm"
-        :class="{ 'drag-over': dragOverKey === col.key }"
-        @dragenter="() => dragOverKey = col.key"
-        @dragleave="(e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) dragOverKey = null
-        }"
-        @drop="() => dragOverKey = null"
+      <transition-group
+        name="fade-slide"
+        tag="div"
+        class="board__columns row wrap"
       >
-        <div class="board__status-inner q-pa-sm rounded-borders">
-          <div class="board__status-title text-subtitle1 q-mb-sm text-body">
-            {{ col.title }}
+        <div
+          v-for="col in columns"
+          :key="col.key"
+          class="board__status col-12 col-sm"
+          :class="{ 'drag-over': dragOverKey === col.key }"
+          @dragenter="() => dragOverKey = col.key"
+          @dragleave="(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget)) dragOverKey = null
+          }"
+          @drop="() => dragOverKey = null"
+        >
+          <div class="board__status-inner q-pa-sm rounded-borders">
+            <div class="board__status-title text-subtitle1 q-mb-sm text-body">
+              {{ col.title }}
+            </div>
+            <draggable
+              v-model="groupedTasks[col.key]"
+              :group="{ name: 'task', pull: true, put: true }"
+              item-key="id"
+              @change="onDragChange($event, col.key)"
+            >
+              <template #item="{ element }">
+                <q-card
+                  class="board__task q-mb-sm cursor-pointer"
+                  @click="props.onEditTask?.(element)"
+                >
+                  <q-card-section>
+                    <div class="board__task-title text-body1">{{ element.title }}</div>
+                    <div class="board__task-description text-caption text-grey">
+                      {{ element.description }}
+                    </div>
+                  </q-card-section>
+                </q-card>
+              </template>
+              <template #placeholder>
+                <div class="board__placeholder" />
+              </template>
+            </draggable>
+            <AddTaskButton :onClick="() => props.onEditTask(null, col.key)" />
           </div>
-          <draggable
-            v-model="groupedTasks[col.key]"
-            :group="{ name: 'task', pull: true, put: true }"
-            item-key="id"
-            @change="onDragChange($event, col.key)"
-          >
-            <template #item="{ element }">
-              <q-card
-                class="board__task q-mb-sm cursor-pointer"
-                @click="props.onEditTask?.(element)"
-              >
-                <q-card-section>
-                  <div class="board__task-title text-body1">{{ element.title }}</div>
-                  <div class="board__task-description text-caption text-grey">
-                    {{ element.description }}
-                  </div>
-                </q-card-section>
-              </q-card>
-            </template>
-            <template #placeholder>
-              <div class="board__placeholder" />
-            </template>
-          </draggable>
-          <AddTaskButton :onClick="() => props.onEditTask(null, col.key)" />
         </div>
-      </div>
+      </transition-group>
     </div>
     <TaskDialog
       :edit-task="editedTask"
@@ -190,5 +196,21 @@ function onDragChange(evt, newStatusKey) {
   box-shadow: 0 0 0 2px rgba(2, 123, 227, 0.4);
   background-color: transparent;
   transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+/* Animate */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
 }
 </style>
