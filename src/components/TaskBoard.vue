@@ -139,7 +139,7 @@ function onDragChange(evt, newStatusKey) {
 .board__status {
   width: 300px;
   flex: 0 0 auto;
-  border: 1px dashed;
+  border: 1px solid;
   border-radius: 4px;
 }
 

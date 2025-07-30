@@ -26,7 +26,10 @@ const view = ref('board')
       <div class="text-h5">Мои задачи</div>
 
       <div class="row q-gutter-sm items-center">
-        <AddTaskButton @click="openDialog()" />
+        <AddTaskButton
+          v-if="view !== 'board'"
+          @click="openDialog()"
+        />
 
         <q-btn-toggle
           v-model="view"
