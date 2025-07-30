@@ -1,8 +1,9 @@
 <script setup>
-import { ref, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, watch, onMounted, nextTick } from 'vue'
 import draggable from 'vuedraggable'
 import { useTaskStore } from '../stores/task'
 import { useStatusStore } from '../stores/status'
+import { useGroupedTasks } from '../composables/useGroupedTasks'
 
 const props = defineProps({
   onEditTask: Function
@@ -11,24 +12,7 @@ const props = defineProps({
 const taskStore = useTaskStore()
 const statusStore = useStatusStore()
 
-const columns = computed(() => statusStore.statuses)
-
-// groupedTasks — реактивная структура вида { [statusKey]: Task[] }
-const groupedTasks = ref({})
-
-function regroupTasks() {
-  const groups = {}
-  for (const col of columns.value) {
-    groups[col.key] = []
-  }
-
-  for (const task of taskStore.userTasks) {
-    const status = task.status || 'todo'
-    if (groups[status]) groups[status].push(task)
-  }
-
-  groupedTasks.value = groups
-}
+const { columns, groupedTasks, regroupTasks } = useGroupedTasks()
 
 onMounted(regroupTasks)
 
@@ -135,6 +119,7 @@ function onDragChange(evt, newStatusKey) {
   justify-content: start;
   /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
   gap: 16px;
+  min-height: 100vh;
 }
 
 .board__status {

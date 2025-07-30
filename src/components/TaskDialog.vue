@@ -5,12 +5,15 @@ import { useTaskStore } from 'stores/task'
 import { useUserStore } from 'stores/user'
 import { useStatusStore } from 'stores/status'
 import { uid } from 'quasar'
+import { useGroupedTasks } from '../composables/useGroupedTasks'
 
 const props = defineProps({
   modelValue: Boolean,
   editTask: Object // если передаётся — редактирование
 })
 const emit = defineEmits(['update:modelValue'])
+
+const { regroupTasks } = useGroupedTasks()
 
 const $q = useQuasar()
 const taskStore = useTaskStore()
@@ -81,6 +84,7 @@ function onSave() {
       ownerId: userStore.user.username
     })
     $q.notify({ type: 'positive', message: 'Задача добавлена' })
+    regroupTasks()
   }
 
   dialog.value = false
