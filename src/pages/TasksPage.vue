@@ -23,7 +23,6 @@ const view = ref('board')
     class="column q-gutter-md"
   >
     <div class="row items-center justify-between">
-      <div class="text-h5 q-mr-lg">Мои задачи</div>
       <q-btn-toggle
         v-model="view"
         spread
@@ -45,7 +44,7 @@ const view = ref('board')
     </div>
 
     <div
-      class="q-mt-md"
+      class="row justify-center q-mx-xl"
       style="min-height: 60vh;"
     >
       <transition

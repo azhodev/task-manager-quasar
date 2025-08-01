@@ -116,8 +116,8 @@ function onDragChange(evt, newStatusKey) {
       </transition-group>
     </div>
     <TaskDialog
-      :edit-task="editedTask"
-      :default-status="newTaskStatus"
+      :edit-task="props.editedTask"
+      :default-status="props.newTaskStatus"
     />
   </div>
 </template>
@@ -137,7 +137,7 @@ function onDragChange(evt, newStatusKey) {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: start;
+  justify-content: space-between;
   gap: 16px;
 }
 

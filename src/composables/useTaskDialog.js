@@ -6,10 +6,12 @@ export function useTaskDialog() {
   const editedTask = ref(null)
   const newTaskStatus = ref(null)
 
-  const openDialog = (task = null, status = null) => {
+  const openDialog = (task = null, status = 'todo') => {
+    console.log('task', task);
+
     showDialog.value = true
     editedTask.value = task
-    newTaskStatus.value = status
+    newTaskStatus.value = task?.status || status
   }
 
   const closeDialog = () => {
