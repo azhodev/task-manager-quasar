@@ -147,7 +147,7 @@ function getStatusLabel(key) {
 .task-table {
   display: flex;
   flex-direction: column;
-  align-items: end;
+  width: 100%;
 }
 
 .text-truncate {

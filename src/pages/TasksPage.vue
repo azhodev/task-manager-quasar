@@ -44,7 +44,7 @@ const view = ref('board')
     </div>
 
     <div
-      class="row justify-center q-mx-xl"
+      class="container q-mt-xl"
       style="min-height: 60vh;"
     >
       <transition
@@ -71,6 +71,13 @@ const view = ref('board')
 </template>
 
 <style scoped>
+.container {
+  max-width: 1280px;
+  width: 100%;
+  margin: 20px auto 0;
+  padding: 0 16px;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.1s ease, filter .1s ease;
