@@ -28,7 +28,7 @@ const view = ref('board')
         spread
         no-caps
         stack
-        size="xs"
+        size="sm"
         :options="[
           { label: 'Доска', value: 'board', icon: 'view_module' },
           { label: 'Таблица', value: 'table', icon: 'table_chart' }
