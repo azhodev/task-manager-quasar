@@ -64,6 +64,7 @@ function getStatusLabel(key) {
         emit-value
         map-options
         style="min-width: 200px"
+        behavior="menu"
       />
     </div>
 
