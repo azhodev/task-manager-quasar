@@ -22,7 +22,7 @@ const view = ref('board')
     padding
     class="column q-gutter-md"
   >
-    <div class="row items-center justify-between">
+    <div class="container row items-center justify-between">
       <q-btn-toggle
         v-model="view"
         spread

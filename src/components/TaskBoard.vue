@@ -137,7 +137,7 @@ function onDragChange(evt, newStatusKey) {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: space-around;
+  justify-content: flex-start;
   gap: 16px;
 }
 
