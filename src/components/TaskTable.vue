@@ -1,18 +1,13 @@
 <script setup>
 import { ref, computed } from 'vue'
+
+import TaskDialog from '../components/TaskDialog.vue'
+
 import { useTaskStore } from '../stores/task'
 import { useStatusStore } from '../stores/status'
-import TaskDialog from '../components/TaskDialog.vue'
-import { useTaskDialog } from '../composables/useTaskDialog'
+import { useTaskDialog } from '../composables/task-dialog'
 
-const {
-  showDialog,
-  editedTask,
-} = useTaskDialog()
-
-const props = defineProps({
-  onEditTask: Function
-})
+const { showDialog, editedTask, openDialog, closeDialog } = useTaskDialog()
 
 const taskStore = useTaskStore()
 const statusStore = useStatusStore()
@@ -40,7 +35,7 @@ const getStatusColor = (status) => {
 }
 
 function onEdit(task) {
-  props.onEditTask?.(task)
+  openDialog(task)
 }
 
 function getStatusLabel(key) {
@@ -64,7 +59,6 @@ function getStatusLabel(key) {
         emit-value
         map-options
         style="min-width: 200px"
-        behavior="menu"
       />
     </div>
 
@@ -82,13 +76,11 @@ function getStatusLabel(key) {
       <!-- Кастомная разметка строки -->
       <template #body="props">
         <q-tr
-          :props="props"
           @click="onEdit(props.row)"
           class="cursor-pointer hover:bg-grey-2"
         >
           <q-td
             key="title"
-            :props="props"
             style="width: 300px; max-width: 300px;"
             class="text-truncate"
           >
@@ -96,16 +88,12 @@ function getStatusLabel(key) {
           </q-td>
           <q-td
             key="description"
-            :props="props"
             style="width: 600px; max-width: 600px;"
             class="text-truncate"
           >
             {{ props.row.description }}
           </q-td>
-          <q-td
-            key="status"
-            :props="props"
-          >
+          <q-td key="status">
             <q-chip
               :color="getStatusColor(props.row.status)"
               text-color="white"
@@ -114,16 +102,10 @@ function getStatusLabel(key) {
               {{ getStatusLabel(props.row.status) }}
             </q-chip>
           </q-td>
-          <q-td
-            key="deadline"
-            :props="props"
-          >
+          <q-td key="deadline">
             {{ props.row.deadline }}
           </q-td>
-          <q-td
-            key="actions"
-            :props="props"
-          >
+          <q-td key="actions">
             <q-btn
               dense
               flat
@@ -139,7 +121,8 @@ function getStatusLabel(key) {
 
     <TaskDialog
       v-model="showDialog"
-      :edit-task="editedTask"
+      :task-to-edit="editedTask"
+      @close="closeDialog"
     />
   </div>
 </template>

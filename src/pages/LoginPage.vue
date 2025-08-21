@@ -1,3 +1,29 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from 'stores/user'
+import { useQuasar } from 'quasar'
+
+const $q = useQuasar()
+
+const username = ref('')
+const password = ref('')
+const router = useRouter()
+const userStore = useUserStore()
+
+function handleLogin() {
+  if (!username.value.trim() || !password.value.trim()) return
+
+  const success = userStore.login(username.value.trim(), password.value)
+  if (success) {
+    router.push('/tasks')
+  } else {
+    // можно через $q.notify или alert
+    $q.notify({ position: 'top', type: 'negative', message: 'Login: "admin"; Password: "1234"' })
+  }
+}
+</script>
+
 <template>
   <q-page class="flex flex-center">
     <q-card
@@ -45,32 +71,6 @@
     </q-card>
   </q-page>
 </template>
-
-<script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUserStore } from 'stores/user'
-import { useQuasar } from 'quasar'
-
-const $q = useQuasar()
-
-const username = ref('')
-const password = ref('')
-const router = useRouter()
-const userStore = useUserStore()
-
-function handleLogin() {
-  if (!username.value.trim() || !password.value.trim()) return
-
-  const success = userStore.login(username.value.trim(), password.value)
-  if (success) {
-    router.push('/tasks')
-  } else {
-    // можно через $q.notify или alert
-    $q.notify({ position: 'top', type: 'negative', message: 'Login: "admin"; Password: "1234"' })
-  }
-}
-</script>
 
 <style lang="scss">
 input:-webkit-autofill,

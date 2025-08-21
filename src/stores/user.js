@@ -1,12 +1,14 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null
   }),
+
   getters: {
     isAuthenticated: (state) => !!state.user
   },
+
   actions: {
     login(username, password) {
       // Упрощённая проверка: логин admin, пароль 1234
@@ -21,7 +23,3 @@ export const useUserStore = defineStore('user', {
     }
   }
 })
-
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))
-}

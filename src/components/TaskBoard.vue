@@ -1,22 +1,19 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import draggable from 'vuedraggable'
-import { useTaskStore } from '../stores/task'
-import { useStatusStore } from '../stores/status'
-import { useGroupedTasks } from '../composables/useGroupedTasks'
+
 import TaskDialog from './TaskDialog.vue'
 import AddTaskButton from 'src/components/AddTaskButton.vue'
 
-const props = defineProps({
-  onEditTask: Function,
-  showDialog: Boolean,
-  editedTask: Object,
-  newTaskStatus: String
-})
+import { useTaskStore } from '../stores/task'
+import { useStatusStore } from '../stores/status'
+import { useGroupedTasks } from '../composables/task-groups'
+import { useTaskDialog } from '../composables/task-dialog'
 
 const taskStore = useTaskStore()
 const statusStore = useStatusStore()
 
+const { showDialog, editedTask, newTaskStatus, openDialog, closeDialog } = useTaskDialog()
 const { columns, groupedTasks, regroupTasks } = useGroupedTasks()
 
 onMounted(regroupTasks)
@@ -87,6 +84,7 @@ function onDragChange(evt, newStatusKey) {
             <div class="board__status-title text-subtitle1 q-mb-sm text-body">
               {{ col.title }}
             </div>
+
             <draggable
               v-model="groupedTasks[col.key]"
               :group="{ name: 'task', pull: true, put: true }"
@@ -95,8 +93,8 @@ function onDragChange(evt, newStatusKey) {
             >
               <template #item="{ element }">
                 <q-card
-                  class="board__task q-mb-sm cursor-pointer"
-                  @click="props.onEditTask?.(element)"
+                  class="board__task q-mb-sm"
+                  @click="openDialog(element)"
                 >
                   <q-card-section>
                     <div class="board__task-title text-body1">{{ element.title }}</div>
@@ -106,18 +104,22 @@ function onDragChange(evt, newStatusKey) {
                   </q-card-section>
                 </q-card>
               </template>
+
               <template #placeholder>
                 <div class="board__placeholder" />
               </template>
             </draggable>
-            <AddTaskButton :onClick="() => props.onEditTask(null, col.key)" />
+
+            <AddTaskButton :onClick="() => openDialog(null, col.key)" />
           </div>
         </div>
       </transition-group>
     </div>
     <TaskDialog
-      :edit-task="props.editedTask"
-      :default-status="props.newTaskStatus"
+      v-model="showDialog"
+      :task-to-edit="editedTask"
+      :default-status="newTaskStatus"
+      @close="closeDialog"
     />
   </div>
 </template>
@@ -161,6 +163,7 @@ function onDragChange(evt, newStatusKey) {
 .board__task {
   transition: box-shadow 0.2s;
   margin-bottom: 15px;
+  cursor: grab;
 }
 
 .board__task:hover {

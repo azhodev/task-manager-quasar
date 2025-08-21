@@ -1,29 +1,44 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
+import { uid } from 'quasar'
+
 import { useTaskStore } from 'stores/task'
 import { useUserStore } from 'stores/user'
 import { useStatusStore } from 'stores/status'
-import { uid } from 'quasar'
-import { useGroupedTasks } from '../composables/useGroupedTasks'
+
+import { useGroupedTasks } from '../composables/task-groups'
 
 const props = defineProps({
   modelValue: Boolean,
-  editTask: Object, // если передаётся — редактирование
+  taskToEdit: Object, // если передаётся — редактирование
   defaultStatus: String,
 })
-const emit = defineEmits(['update:modelValue'])
 
-const { regroupTasks } = useGroupedTasks()
-
-const $q = useQuasar()
-const taskStore = useTaskStore()
-const userStore = useUserStore()
+const emit = defineEmits(['update:modelValue', 'close'])
 
 const dialog = computed({
   get: () => props.modelValue,
   set: (val) => emit('update:modelValue', val)
 })
+
+const statusStore = useStatusStore()
+
+const statusOptions = computed(() =>
+  statusStore.statuses.map(s => ({
+    value: s.key,
+    label: s.title
+  }))
+)
+
+function onCancel() {
+  emit('close')
+}
+
+const $q = useQuasar()
+const taskStore = useTaskStore()
+const userStore = useUserStore()
+const { regroupTasks } = useGroupedTasks()
 
 // ✏️ Начальные данные формы
 const form = ref({
@@ -48,16 +63,14 @@ const rules = {
 }
 
 // 🎯 Если редактируем — заполняем форму
-watch(() => props.editTask, (task) => {
+watch(() => props.taskToEdit, (task) => {
   if (task) {
     form.value = { ...task }
-  } else {
-    resetForm()
   }
 })
 
 watch(() => props.defaultStatus, (newVal) => {
-  if (!props.editTask) {
+  if (!props.taskToEdit) {
     form.value.status = newVal || 'todo'
   }
 })
@@ -79,7 +92,7 @@ function onSave() {
     return
   }
 
-  if (props.editTask) {
+  if (props.taskToEdit) {
     taskStore.updateTask(f.id, { ...f })
     $q.notify({ position: 'bottom-right', type: 'positive', message: 'Задача обновлена' })
   } else {
@@ -92,30 +105,14 @@ function onSave() {
     regroupTasks()
   }
 
-  dialog.value = false
+  emit('close')
   resetForm()
 }
 
-function onCancel() {
-  dialog.value = false
-  resetForm()
-}
-
-const statusStore = useStatusStore()
-
-const statusOptions = computed(() =>
-  statusStore.statuses.map(s => ({
-    value: s.key,
-    label: s.title
-  }))
-)
 </script>
 
 <template>
-  <q-dialog
-    v-model="dialog"
-    persistent
-  >
+  <q-dialog v-model="dialog">
     <q-card
       @keydown.ctrl.enter.prevent="onSave"
       @keydown.esc.prevent="onCancel"
@@ -124,7 +121,7 @@ const statusOptions = computed(() =>
     >
       <q-card-section>
         <div class="text-h6">
-          {{ props.editTask ? 'Редактировать' : 'Новая задача' }}
+          {{ props.taskToEdit ? 'Редактировать' : 'Новая задача' }}
         </div>
       </q-card-section>
 

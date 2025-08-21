@@ -4,13 +4,12 @@ import TaskBoard from '../components/TaskBoard.vue'
 import TaskTable from '../components/TaskTable.vue'
 import TaskDialog from '../components/TaskDialog.vue'
 import AddTaskButton from 'src/components/AddTaskButton.vue'
-import { useTaskDialog } from '../composables/useTaskDialog'
+import { useTaskDialog } from '../composables/task-dialog'
 
 const {
   showDialog,
-  editedTask,
   openDialog,
-  newTaskStatus
+  closeDialog,
 } = useTaskDialog()
 
 const view = ref('board')
@@ -54,18 +53,13 @@ const view = ref('board')
         <component
           :is="view === 'board' ? TaskBoard : TaskTable"
           :key="view"
-          :onEditTask="openDialog"
-          :show-dialog="showDialog"
-          :edited-task="editedTask"
-          :new-task-status="newTaskStatus"
         />
       </transition>
     </div>
 
     <TaskDialog
       v-model="showDialog"
-      :edit-task="editedTask"
-      :default-status="newTaskStatus"
+      @close="closeDialog"
     />
   </q-page>
 </template>
