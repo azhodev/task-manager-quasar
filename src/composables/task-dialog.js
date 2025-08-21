@@ -1,4 +1,3 @@
-// composables/useTaskDialog.ts
 import { ref } from 'vue'
 
 export function useTaskDialog() {
@@ -7,8 +6,6 @@ export function useTaskDialog() {
   const newTaskStatus = ref(null)
 
   const openDialog = (task = null, status = 'todo') => {
-    console.log('task', task);
-
     showDialog.value = true
     editedTask.value = task
     newTaskStatus.value = task?.status || status
